@@ -27,5 +27,9 @@ if [[ ${1:-} == --fix ]]; then shfmt -w "${files[@]}" && ok "shfmt applicato"; e
   }
 fi
 bats tests/bash && ok "bats" || bad "bats"
-python3 -m unittest discover -s tests/deployment && ok "deployment unit tests" || bad "deployment unit tests"
+if [[ -d tests/deployment ]]; then
+  python3 -m unittest discover -s tests/deployment && ok "deployment unit tests" || bad "deployment unit tests"
+else
+  echo "INFO nessun test deployment in questo ramo"
+fi
 exit "$fail"
