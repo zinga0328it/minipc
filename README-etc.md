@@ -12,3 +12,9 @@ Specchio in `agents-etc/etc/` (installazione: copiare sotto `/etc` con root, dop
 - Agenti eseguibili in `/etc/.github/agents/`: `nftables`, `apache2`, `fail2ban`, `tor`, `yggdrasil`, `orchestratore-etc`
 - `orchestratore-etc` coordina i cinque e sara' subordinato all'orchestratore generale nella HOME (non ancora creato)
 - Interventi privilegiati sempre con autorizzazione dell'utente
+- Gli agenti sono letti da VS Code all'avvio: dopo l'installazione serve `Developer: Reload Window` (non ancora eseguito: delega non provata)
+
+## Stato /etc e blocchi
+- nftables: 80/443 rimosse (Apache solo su localhost); ServerName globale in Apache; `X11Forwarding no` in `/etc/ssh/sshd_config.d/60-hardening.conf`
+- Cloudflare Tunnel: nessun tunnel permanente (serve account/dominio, token e zone ID in `/etc/honeypot/cloudflare.env`); provato solo un quick tunnel temporaneo
+- SSH: `PasswordAuthentication yes` lasciato attivo, il login a chiave non e' verificato da questa macchina; disattivarlo solo dopo una prova da un client con chiave
