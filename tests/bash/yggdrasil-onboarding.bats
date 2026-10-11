@@ -22,7 +22,7 @@ EOF
 Build version: 0.5.12
 IPv6 address: 202:f4:dc04:1ed3:2c02:2f5:53e6:3b23
 Public key: 3fe1647f7c259a7fbfa15583389b98ba1321cecaf6af7939dcc417a96bde381f
-Private key: MUST_NEVER_BE_PRINTED
+unrelated-field: NEVER_OUTPUT_SENTINEL
 EOF
 }
 
@@ -34,7 +34,7 @@ teardown() { rm -rf "$SB"; }
   [[ $output == *'3fe1647f7c259a7fbfa15583389b98ba1321cecaf6af7939dcc417a96bde381f'* ]]
   [[ $output == *'202:f4:dc04:1ed3:2c02:2f5:53e6:3b23'* ]]
   [[ $output == *'mailto:pepealessandro@proton.me'* ]]
-  [[ $output != *'MUST_NEVER_BE_PRINTED'* ]]
+  [[ $output != *'NEVER_OUTPUT_SENTINEL'* ]]
 }
 
 @test "non dichiara pronto il sistema se Yggdrasil non e' attivo" {
@@ -48,7 +48,7 @@ teardown() { rm -rf "$SB"; }
   YGG_COMMAND_FAIL=1 run "$ROOT/tools/yggdrasil-onboarding.sh"
   [ "$status" -ne 0 ]
   [[ $output == *'getSelf non accessibile'* ]]
-  [[ $output != *'MUST_NEVER_BE_PRINTED'* ]]
+  [[ $output != *'NEVER_OUTPUT_SENTINEL'* ]]
 }
 
 @test "rifiuta valori pubblici malformati" {
