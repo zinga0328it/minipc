@@ -1,0 +1,12 @@
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+backend = auto
+maxretry = 3
+findtime = 6h
+bantime = 6h
+ignoreip = 127.0.0.1/8 ::1
+banaction = nftables[type=allports, chain="input"]
+action = %(banaction)s

@@ -1,0 +1,12 @@
+[yggdrasil]
+enabled = true
+port = 9001
+filter = yggdrasil
+logpath = /var/log/syslog
+backend = auto
+maxretry = 3
+findtime = 6h
+bantime = 6h
+ignoreip = 127.0.0.1/8 ::1
+banaction = nftables[type=multiport, chain="input", port="9001"]
+action = %(banaction)s
