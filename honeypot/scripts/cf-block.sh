@@ -8,8 +8,13 @@ ENV_FILE=${HONEYPOT_CF_ENV:-/etc/honeypot/cloudflare.env}
 ALLOWLIST=${HONEYPOT_ALLOWLIST:-/etc/honeypot/allowlist.txt}
 API=https://api.cloudflare.com/client/v4
 
-action=${1:-}; ip=${2:-}; apply=${3:-}
-[[ $action == block || $action == unblock ]] && [[ -n $ip ]] || { sed -n '2,3p' "$0"; exit 2; }
+action=${1:-}
+ip=${2:-}
+apply=${3:-}
+[[ $action == block || $action == unblock ]] && [[ -n $ip ]] || {
+  sed -n '2,3p' "$0"
+  exit 2
+}
 
 # Rifiuta IP non validi, privati/loopback o in allowlist (mai bloccare se stessi).
 python3 - "$ip" "$ALLOWLIST" <<'PY'
@@ -31,7 +36,10 @@ if [[ $apply != --apply ]]; then
   exit 0
 fi
 
-[[ -r $ENV_FILE ]] || { echo "manca $ENV_FILE" >&2; exit 1; }
+[[ -r $ENV_FILE ]] || {
+  echo "manca $ENV_FILE" >&2
+  exit 1
+}
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 : "${CF_API_TOKEN:?}" "${CF_ZONE_ID:?}"
@@ -42,11 +50,14 @@ rules="$API/zones/$CF_ZONE_ID/firewall/access_rules/rules"
 
 if [[ $action == block ]]; then
   cf -X POST -H 'Content-Type: application/json' "$rules" \
-    --data "{\"mode\":\"block\",\"configuration\":{\"target\":\"ip\",\"value\":\"$ip\"},\"notes\":\"honeypot $(date -Is)\"}" \
-    | python3 -c 'import json,sys; print("ok" if json.load(sys.stdin)["success"] else "errore")'
+    --data "{\"mode\":\"block\",\"configuration\":{\"target\":\"ip\",\"value\":\"$ip\"},\"notes\":\"honeypot $(date -Is)\"}" |
+    python3 -c 'import json,sys; print("ok" if json.load(sys.stdin)["success"] else "errore")'
 else
-  id=$(cf -G "$rules" --data-urlencode "configuration.value=$ip" \
-    | python3 -c 'import json,sys; r=json.load(sys.stdin)["result"]; print(r[0]["id"] if r else "")')
-  [[ -n $id ]] || { echo "nessuna regola per $ip"; exit 0; }
+  id=$(cf -G "$rules" --data-urlencode "configuration.value=$ip" |
+    python3 -c 'import json,sys; r=json.load(sys.stdin)["result"]; print(r[0]["id"] if r else "")')
+  [[ -n $id ]] || {
+    echo "nessuna regola per $ip"
+    exit 0
+  }
   cf -X DELETE "$rules/$id" >/dev/null && echo "rimosso $ip"
 fi

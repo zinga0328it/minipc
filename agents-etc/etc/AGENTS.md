@@ -16,6 +16,7 @@ Un cambio di porta in un servizio richiede un controllo congiunto con `nftables`
 ## Regole per tutti gli agenti
 - Rispettare i permessi Linux: nessun `chmod`/`chown` esteso su `/etc`, nessun uso di root come scorciatoia.
 - Ogni intervento privilegiato (`sudo`, restart/reload di servizi, scrittura in `/etc`) richiede prima l'autorizzazione esplicita dell'utente, dopo aver mostrato comando e motivo.
+- Eccezione preautorizzata: `sudo -n /usr/local/sbin/etc-deploy {install <percorso> < file | reload <servizio> | rollback | list | verify}`. Accetta solo percorsi e direttive in whitelist (nftables, apache2, fail2ban jail/filter, torrc, AGENTS.md, agenti), con backup e rollback automatici. SSH, sudoers, chiavi Yggdrasil e `sudo` generico restano soggetti ad autorizzazione.
 - Prima di ogni modifica: backup del file, verifica sintassi, piano di rollback. Dopo: verifica del servizio e di SSH.
 - Mai stampare, leggere inutilmente o committare segreti: chiavi Tor in `/var/lib/tor/hidden_service/`, chiave privata Yggdrasil in `/etc/yggdrasil/`, token Cloudflare, `/etc/honeypot/cloudflare.env`.
 - Non aprire porte pubbliche e non toccare il modem. Non modificare `main` su GitHub.

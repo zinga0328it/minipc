@@ -7,6 +7,15 @@
 - cloudflared/config.yml.example: template tunnel verso 127.0.0.1:8080
 
 ## Sciame ETC
+Agenti in `.github/agents/` (apri `~/minipc` in VS Code e ricarica la finestra): `orchestratore-etc`, `nftables`, `apache2`, `fail2ban`, `tor`, `yggdrasil`, `bash`. Copie in `/etc/.github/agents/` per il workspace `/etc`.
+
+## Deployment privilegiato
+`admin/etc-deploy` (installato in `/usr/local/sbin`, root:root) + `/etc/sudoers.d/90-etc-deploy` (solo quel comando in `NOPASSWD`). Installazione/aggiornamento: `sudo bash admin/bootstrap.sh`. Limiti: whitelist di percorsi, no symlink, directory solo di root, filtri su direttive che eseguono codice, rollback automatico. Nota: `ragno` ha anche `NOPASSWD: ALL` in `/etc/sudoers.d/{ragno,90-ragno}`; finche' esiste, il deploy non e' un limite. Revoca reversibile: `sudo bash admin/bootstrap.sh --revoke-nopasswd-all`.
+
+## Bash
+`tools/check.sh` (bash -n, ShellCheck, shfmt, Bats), `lib/common.sh`, test in `tests/bash/`.
+
+## Sciame ETC (specchio documentazione)
 Specchio in `agents-etc/etc/` (installazione: copiare sotto `/etc` con root, dopo approvazione).
 - `AGENTS.md` in `/etc`, `/etc/{nftables,apache2,fail2ban,tor,yggdrasil}`
 - Agenti eseguibili in `/etc/.github/agents/`: `nftables`, `apache2`, `fail2ban`, `tor`, `yggdrasil`, `orchestratore-etc`

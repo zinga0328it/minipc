@@ -4,22 +4,32 @@
 set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 fail=0
-ok()  { echo "OK   $*"; }
-bad() { echo "FAIL $*"; fail=1; }
+ok() { echo "OK   $*"; }
+bad() {
+  echo "FAIL $*"
+  fail=1
+}
 
 for s in "$ROOT"/scripts/*.sh "$0"; do bash -n "$s" && ok "sintassi $(basename "$s")" || bad "sintassi $s"; done
 
 out=$(fail2ban-regex "$ROOT/tests/sample-honeypot.log" "$ROOT/fail2ban/filter.d/honeypot.conf" 2>&1)
-echo "$out" | grep -q 'Lines: 5 lines, 0 ignored, 4 matched, 1 missed' \
-  && ok "filtro fail2ban: 4 match (IPv4+IPv6), log combined ignorato" || { bad "filtro fail2ban"; echo "$out" | tail -8; }
+echo "$out" | grep -q 'Lines: 5 lines, 0 ignored, 4 matched, 1 missed' &&
+  ok "filtro fail2ban: 4 match (IPv4+IPv6), log combined ignorato" || {
+  bad "filtro fail2ban"
+  echo "$out" | tail -8
+}
 
 tmp=$(mktemp -d)
-cleanup() { [[ -f $tmp/pid ]] && kill "$(cat "$tmp/pid")" 2>/dev/null; rm -rf "$tmp"; }
+cleanup() {
+  [[ -f $tmp/pid ]] && kill "$(cat "$tmp/pid")" 2>/dev/null
+  rm -rf "$tmp"
+}
 trap cleanup EXIT
 M=/usr/lib/apache2/modules
 mkdir -p "$tmp/tunnel" "$tmp/onion"
-echo legit-tunnel > "$tmp/tunnel/index.html"; echo legit-onion > "$tmp/onion/index.html"
-cat > "$tmp/apache.conf" <<EOF
+echo legit-tunnel >"$tmp/tunnel/index.html"
+echo legit-onion >"$tmp/onion/index.html"
+cat >"$tmp/apache.conf" <<EOF
 ServerRoot "$tmp"
 PidFile "$tmp/pid"
 ErrorLog "$tmp/error.log"
@@ -41,7 +51,10 @@ LoadModule dir_module $M/mod_dir.so
     Include $ROOT/apache2/honeypot-onion.inc
 </VirtualHost>
 EOF
-if apache2 -t -f "$tmp/apache.conf" 2>&1 | grep -q 'Syntax OK'; then ok "apache2 configtest (sandbox, due vhost)"; else bad "apache2 configtest"; apache2 -t -f "$tmp/apache.conf" 2>&1 | tail -5; fi
+if apache2 -t -f "$tmp/apache.conf" 2>&1 | grep -q 'Syntax OK'; then ok "apache2 configtest (sandbox, due vhost)"; else
+  bad "apache2 configtest"
+  apache2 -t -f "$tmp/apache.conf" 2>&1 | tail -5
+fi
 
 if apache2 -f "$tmp/apache.conf" -k start 2>"$tmp/start.err"; then
   sleep 1
@@ -52,13 +65,20 @@ if apache2 -f "$tmp/apache.conf" -k start 2>"$tmp/start.err"; then
   code -H 'CF-Connecting-IP: 203.0.113.7' http://127.0.0.1:18081/.env >/dev/null
   code -H 'CF-Connecting-IP: 203.0.113.7' http://127.0.0.1:18081/xmlrpc.php >/dev/null
   sleep 1
-  [[ $(grep -c '^203.0.113.7 ' "$tmp/honeypot.log") == 2 ]] && ok "tunnel: IP reale da CF-Connecting-IP nel log (2 hit)" || { bad "tunnel log"; cat "$tmp/honeypot.log"; }
-  [[ $(wc -l < "$tmp/honeypot.log") == 2 ]] && ok "tunnel: richieste legittime e onion fuori dal log honeypot" || bad "tunnel: log non separato"
-  [[ $(wc -l < "$tmp/honeypot-onion.log") == 2 ]] && ! grep -Eq '127\.0\.0\.1|203\.0\.113\.7' "$tmp/honeypot-onion.log" && ok "onion: 2 hit, nessun IP registrato (header Cloudflare ignorato)" || { bad "onion log"; cat "$tmp/honeypot-onion.log"; }
+  [[ $(grep -c '^203.0.113.7 ' "$tmp/honeypot.log") == 2 ]] && ok "tunnel: IP reale da CF-Connecting-IP nel log (2 hit)" || {
+    bad "tunnel log"
+    cat "$tmp/honeypot.log"
+  }
+  [[ $(wc -l <"$tmp/honeypot.log") == 2 ]] && ok "tunnel: richieste legittime e onion fuori dal log honeypot" || bad "tunnel: log non separato"
+  [[ $(wc -l <"$tmp/honeypot-onion.log") == 2 ]] && ! grep -Eq '127\.0\.0\.1|203\.0\.113\.7' "$tmp/honeypot-onion.log" && ok "onion: 2 hit, nessun IP registrato (header Cloudflare ignorato)" || {
+    bad "onion log"
+    cat "$tmp/honeypot-onion.log"
+  }
   fail2ban-regex "$tmp/honeypot.log" "$ROOT/fail2ban/filter.d/honeypot.conf" 2>&1 | grep -q 'Lines: 2 lines, 0 ignored, 2 matched' && ok "fail2ban riconosce il log reale di Apache" || bad "fail2ban su log reale"
   [[ $(code -X POST --data-binary "$(head -c 20000 /dev/zero | tr '\0' a)" http://127.0.0.1:18081/) == 413 ]] && ok "onion: body oltre il limite respinto (413)" || bad "onion: LimitRequestBody"
 else
-  bad "avvio apache sandbox"; cat "$tmp/start.err"
+  bad "avvio apache sandbox"
+  cat "$tmp/start.err"
 fi
 
 "$ROOT/scripts/cf-block.sh" block 9.9.9.9 | grep -q dry-run && ok "cf-block dry-run" || bad "cf-block dry-run"
