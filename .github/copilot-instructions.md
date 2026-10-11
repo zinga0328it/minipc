@@ -16,3 +16,4 @@ Se sei l'orchestratore generale e non hai i requisiti del progetto, chiedi solo:
 - Il deploy statico usa `deployment/static-site/deploy.py`: prima `--plan`, poi revisione dell'hash del manifest; backup e rollback sono obbligatori. Non eseguire deploy live senza approvazione.
 - ISTRUZIONI GLOBALI: `~/.copilot/copilot-instructions.md`; agente generale: `~/.copilot/agents/servicess-orchestrator.agent.md`.
 - Il bootstrap apre il workspace VS Code multi-root. Il CLI non seleziona/invia un agente; non simulare l'avvio automatico della chat.
+- All'avvio mostra l'onboarding Yggdrasil con `tools/yggdrasil-onboarding.sh`: solo IPv6 e chiave pubblica via `sudo -n yggdrasilctl getSelf`; mai leggere/esporre la chiave privata. Chiedi di inviare i dati a pepealessandro@proton.me, non inviare email e attendi i parametri di peering autorizzati.
