@@ -13,11 +13,11 @@ bad() {
 }
 
 for t in shellcheck shfmt bats; do command -v "$t" >/dev/null || {
-  bad "manca $t (sudo bash admin/bootstrap.sh)"
+  bad "manca $t (vedi admin/bootstrap.sh per i pacchetti Debian)"
   exit 1
 }; done
 
-mapfile -t files < <(git ls-files '*.sh' admin/etc-deploy | sort -u)
+mapfile -t files < <(find . -type f \( -name '*.sh' -o -path './admin/etc-deploy' -o -path './admin/servicess-deploy' \) -not -path './.git/*' | sort)
 for f in "${files[@]}"; do bash -n "$f" && ok "bash -n $f" || bad "bash -n $f"; done
 shellcheck "${files[@]}" && ok "shellcheck (${#files[@]} file)" || bad "shellcheck"
 if [[ ${1:-} == --fix ]]; then shfmt -w "${files[@]}" && ok "shfmt applicato"; else
@@ -27,4 +27,5 @@ if [[ ${1:-} == --fix ]]; then shfmt -w "${files[@]}" && ok "shfmt applicato"; e
   }
 fi
 bats tests/bash && ok "bats" || bad "bats"
+python3 -m unittest discover -s tests/deployment && ok "deployment unit tests" || bad "deployment unit tests"
 exit "$fail"

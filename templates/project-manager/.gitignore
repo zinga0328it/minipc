@@ -1,0 +1,12 @@
+/target/
+.env
+.env.*
+!.env.example
+/secrets/*
+!/secrets/README.md
+/database/*
+!/database/README.md
+/config/*.local.*
+*.dump
+*.sql.gz
+*.age

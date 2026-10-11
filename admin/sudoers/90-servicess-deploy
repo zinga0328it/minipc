@@ -1,0 +1,2 @@
+# I dispatcher applica una allowlist interna; nessuna shell/interprete generico e' autorizzato.
+{{SERVICE_USER}} ALL=(root) NOPASSWD: /usr/local/sbin/servicess-deploy

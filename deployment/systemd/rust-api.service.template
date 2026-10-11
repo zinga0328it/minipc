@@ -1,0 +1,27 @@
+[Unit]
+Description=Servicess Rust API (rendered per progetto dal dispatcher)
+After=network.target
+
+[Service]
+Type=simple
+User={{SERVICE_USER}}
+Group={{SERVICE_USER}}
+WorkingDirectory={{APP_ROOT}}
+ExecStart={{APP_ROOT}}/api/target/release/{{PROJECT_SLUG}}-api
+EnvironmentFile=-{{APP_ROOT}}/secrets/runtime.env
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

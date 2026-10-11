@@ -1,0 +1,7 @@
+[service]
+bind = "127.0.0.1"
+port = 3000
+
+[database]
+# Inserire solo il nome logico. Le credenziali sono lette da secrets/ a runtime.
+name = "{{PROJECT_SLUG}}"

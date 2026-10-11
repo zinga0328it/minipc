@@ -1,0 +1,9 @@
+# Includere solo nel vhost HTTPS/sito approvato dopo che il servizio API e' attivo.
+# Abilitare mod_proxy e mod_proxy_http con approvazione amministrativa.
+ProxyPreserveHost On
+ProxyPass        /api/ http://127.0.0.1:<API_PORT>/ retry=0
+ProxyPassReverse /api/ http://127.0.0.1:<API_PORT>/
+
+<Location "/api/">
+    Require all granted
+</Location>

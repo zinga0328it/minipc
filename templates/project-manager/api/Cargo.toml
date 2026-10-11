@@ -1,0 +1,12 @@
+[package]
+name = "{{PROJECT_CRATE}}-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "{{PROJECT_SLUG}}-api"
+path = "src/main.rs"
+
+[dependencies]
+{{PROJECT_CRATE}}-common = { path = "../modules/common" }

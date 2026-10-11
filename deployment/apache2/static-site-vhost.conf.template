@@ -1,0 +1,21 @@
+<VirtualHost *:80>
+    ServerName <SITE_HOSTNAME>
+    DocumentRoot /var/www/<SITE_NAME>/public
+
+    <Directory /var/www/<SITE_NAME>/public>
+        Options -Indexes -ExecCGI -Includes
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    <FilesMatch "(?i)^(?:\.env(?:\..*)?|AGENTS\.md|.*\.(?:db|sqlite3?|pem|key|py|sh|php|dump|bak))$">
+        Require all denied
+    </FilesMatch>
+
+    <DirectoryMatch "/\.git(?:/|$)">
+        Require all denied
+    </DirectoryMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/<SITE_NAME>-error.log
+    CustomLog ${APACHE_LOG_DIR}/<SITE_NAME>-access.log combined
+</VirtualHost>
