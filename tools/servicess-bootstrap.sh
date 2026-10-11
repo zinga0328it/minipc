@@ -11,6 +11,18 @@ check_file() { [[ -f $1 ]] && echo "OK $1" || {
   fail=1
 }; }
 
+check_agent() {
+  local name=$1
+  if [[ -f $ROOT/.github/agents/$name.agent.md ]]; then
+    echo "OK workspace agent $name"
+  elif [[ -f $HOME/.copilot/agents/$name.agent.md ]]; then
+    echo "OK user agent $name"
+  else
+    echo "MISSING agent $name (workspace or ~/.copilot/agents)"
+    fail=1
+  fi
+}
+
 ensure_codex_security() {
   command -v codex-security >/dev/null && return 0
   command -v npm >/dev/null && command -v node >/dev/null || {
@@ -77,10 +89,9 @@ check() {
     fail=1
   fi
   for name in servicess-orchestrator orchestratore-home orchestratore-etc orchestratore-var backend-project html-frontend static-deploy bash; do
-    check_file "$ROOT/.github/agents/$name.agent.md"
-    check_file "$HOME/.copilot/agents/$name.agent.md"
+    check_agent "$name"
   done
-  for name in apache2 nftables fail2ban tor yggdrasil; do check_file "$ROOT/.github/agents/$name.agent.md"; done
+  for name in apache2 nftables fail2ban tor yggdrasil; do check_agent "$name"; done
   if command -v cargo >/dev/null; then echo "OK Rust $(rustc --version)"; else echo "INFO Rust toolchain missing; scaffold is ready, build unavailable"; fi
   if code --list-extensions 2>/dev/null | grep -qi '^github\.copilot'; then echo "OK Copilot extension found"; else echo "WARN Copilot extension not listed by CLI; verify Chat Agent Host in UI"; fi
   return "$fail"
