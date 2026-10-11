@@ -11,6 +11,7 @@
 - Non copiare nessun backend, database o segreto in `~/web` o `/var/www`.
 - API esposte solo via proxy esplicitamente configurato; servizi backend continuano a girare da questa directory.
 - `.env` non cifra i segreti: non copiarlo in `~/web`, non usare variabili frontend pubbliche per chiavi private, controllare owner/mode, ignorare il file in Git e ruotare eventuali chiavi esposte. Fail2ban non protegge i segreti API; usare authz, rate limit e audit log nell'API e usare Fail2ban solo su log di eventi ripetuti.
-- Ogni modulo dichiara API e dipendenze; test automatici obbligatori.
+- Ogni modulo dichiara API e dipendenze; test automatici obbligatori; `cargo audit` prima del rilascio.
+- Utenti del gestionale: password con Argon2, sessioni con cookie `HttpOnly`/`Secure`/`SameSite`, MFA per gli amministratori, rate limit sul login e audit log.
 - Backup di sorgenti/config/dati applicativi cifrati; PostgreSQL con `pg_dump` tramite ruolo dedicato e restore provato.
 - Git remoto del cliente privato; verifica `.gitignore` e scansione segreti prima del push.
