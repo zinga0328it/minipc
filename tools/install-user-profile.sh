@@ -6,7 +6,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 DEST=${COPILOT_HOME:-$HOME/.copilot}
 STAMP=$(date +%Y%m%d-%H%M%S)
 BACKUP=$DEST/backups/servicess-$STAMP
-AGENTS=(servicess-orchestrator orchestratore-home orchestratore-etc orchestratore-var backend-project html-frontend static-deploy bash)
+AGENTS=(servicess-orchestrator orchestratore-home orchestratore-etc orchestratore-var backend-project html-frontend static-deploy bash apache2 nftables fail2ban tor yggdrasil)
 
 [[ -d $DEST || ! -e $DEST ]] || {
   echo "profilo non e' una directory: $DEST" >&2
