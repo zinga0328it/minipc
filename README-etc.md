@@ -27,4 +27,4 @@ Specchio in `agents-etc/etc/` (installazione: copiare sotto `/etc` con root, dop
 ## Stato /etc e blocchi
 - nftables: 80/443 rimosse (Apache solo su localhost); ServerName globale in Apache; `X11Forwarding no` in `/etc/ssh/sshd_config.d/60-hardening.conf`
 - Cloudflare Tunnel: nessun tunnel permanente (serve account/dominio, token e zone ID in `/etc/honeypot/cloudflare.env`); provato solo un quick tunnel temporaneo
-- SSH: `PasswordAuthentication yes` lasciato attivo, il login a chiave non e' verificato da questa macchina; disattivarlo solo dopo una prova da un client con chiave
+- SSH: `PasswordAuthentication yes` e `PubkeyAuthentication yes` devono restare SEMPRE entrambe attive: senza la password la piattaforma Code Agents non parte. Non disattivare la password; protezione via jail fail2ban `sshd`.
