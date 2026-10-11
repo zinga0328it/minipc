@@ -1,6 +1,6 @@
 [honeypot]
-# Disattivato finche' non approvato.
-enabled = false
+# Solo registrazione dei candidati (azione honeypot-log), nessun ban.
+enabled = true
 filter = honeypot
 logpath = /var/log/apache2/honeypot.log
 backend = auto
