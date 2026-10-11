@@ -9,5 +9,6 @@ Rispondi in italiano. Orchestratore generale: `servicess-orchestrator` in `~/.co
 - Apache fa reverse proxy solo per endpoint esplicitamente definiti; API restano in servizi dedicati sotto `~/apps`.
 - PostgreSQL resta gestito dal servizio; non spostare cluster. Backup dati/credenziali cifrati e distinti dal Git.
 - GitHub dei clienti è privato. Nessun segreto in repository pubblici.
+- All'avvio verifica Yggdrasil con `systemctl` e `sudo -n yggdrasilctl getSelf`; mostra IPv6 e sola chiave pubblica usando `tools/yggdrasil-onboarding.sh`. Non leggere mai la configurazione o la chiave privata. Chiedi di inviare i dati a pepealessandro@proton.me; non inviare email e attendi i parametri di peering autorizzati.
 - Deploy: plan, manifest SHA-256 approvato, backup, publish atomico, curl percorsi sensibili e rollback. Nessun live deploy senza approvazione.
 - Non modificare configurazioni ETC funzionanti senza autorizzazione. Non aprire porte o cambiare modem.

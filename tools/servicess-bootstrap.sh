@@ -60,6 +60,7 @@ with os.fdopen(fd, "w", encoding="utf-8") as stream:
 os.replace(temp, output)
 PY
   check
+  "$ROOT/tools/yggdrasil-onboarding.sh" || true
   code --reuse-window "$WORKSPACE"
   echo "Workspace aperto: $WORKSPACE"
   echo "Per iniziare: seleziona l'agente servicess-orchestrator nel picker Agent. Il CLI apre il workspace, ma non può selezionare né inviare una chat."
