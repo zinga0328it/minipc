@@ -1,0 +1,4 @@
+shell=bash
+external-sources=true
+# ok/bad non falliscono mai: A && ok || bad e' intenzionale; SC2329: funzioni usate da trap
+disable=SC2015,SC2329
