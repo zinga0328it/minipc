@@ -123,6 +123,7 @@ PY
   "$ROOT/tools/yggdrasil-onboarding.sh" || true
   code --reuse-window "$WORKSPACE"
   echo "Workspace aperto: $WORKSPACE"
+  echo "IMPORTANTE: usa Code Agents (host Agents di VS Code), non il VS Code normale: serve per il multi-agente. SSH deve avere attive chiave e password."
   echo "Per iniziare: seleziona l'agente servicess-orchestrator nel picker Agent. Il CLI apre il workspace, ma non può selezionare né inviare una chat."
 }
 

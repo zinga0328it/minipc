@@ -24,7 +24,9 @@ Backend privati: `~/apps/<nome>/`. Sorgenti frontend: `~/web/<sito>/`. Pubblicaz
 - Scritture in `/etc`: solo `sudo -n /usr/local/sbin/etc-deploy install <percorso> < <file>` (percorsi e direttive in whitelist, backup e rollback automatici), poi `etc-deploy reload <servizio>`. Altro `sudo`: chiedere all'utente con comando e motivo.
 - Prima di ogni modifica: backup, verifica sintassi, piano di rollback. Dopo: verificare servizio e SSH (porta 22).
 - Mai pubblicare o stampare segreti: chiavi Tor e Yggdrasil, token Cloudflare, `/etc/honeypot/cloudflare.env`.
-- Non aprire porte pubbliche, non toccare il modem, non modificare `main`, non cambiare l'autenticazione SSH finche' il login a chiave da un client esterno non e' verificato.
+- Non aprire porte pubbliche, non toccare il modem, non modificare `main`.
+- SSH: devono restare SEMPRE attive sia la chiave pubblica sia la password (`PubkeyAuthentication yes` e `PasswordAuthentication yes`), non solo la chiave: senza la password la piattaforma Code Agents non parte. Mai disattivare `PasswordAuthentication`; la protezione resta nel jail fail2ban `sshd`.
+- Il cliente deve aprire **Code Agents** (host Agents di VS Code), non il VS Code normale: serve per usare il multi-agente (orchestratore e specialisti).
 - Non dichiarare funzionante cio' che non e' stato verificato.
 - Revisione manifest obbligatoria: l'allowlist esclude tipi/file riservati ma non può dimostrare che contenuto statico arbitrario sia innocuo.
 - Installazione admin separata e non eseguita: non usare finché resta attivo `NOPASSWD: ALL`; prima va revocato con approvazione.

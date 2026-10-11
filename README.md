@@ -10,4 +10,8 @@ La piattaforma separa i gestionali privati in `~/apps/<progetto>`, i sorgenti st
 - `tools/servicess-deploy.sh plan <sito>` produce il manifest; publish richiede hash e dispatcher sudo allowlisted.
 - `deployment/README.md` descrive publisher, provisioning, proxy API e backup cifrati.
 
+## Requisiti di avvio
+- **Code Agents, non VS Code normale**: il cliente deve aprire Code Agents (host Agents di VS Code); serve per usare il multi-agente.
+- **SSH con chiave e password attive**: `PubkeyAuthentication yes` e `PasswordAuthentication yes`. Se la password viene disattivata la piattaforma Code Agents non parte. Non disattivarla; la protezione e' il jail fail2ban `sshd`.
+
 Il bootstrap non invia un messaggio Copilot in automatico: VS Code CLI non supporta la selezione/invio di un agente custom. Il primo turno dell'agente `servicess-orchestrator`, una volta selezionato, pone solo la domanda prevista. Il dispatcher admin è sorgente non installata e richiede autorizzazione/revoca dei grant `NOPASSWD: ALL` preesistenti.
