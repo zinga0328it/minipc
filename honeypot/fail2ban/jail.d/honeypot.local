@@ -1,0 +1,12 @@
+[honeypot]
+# Disattivato finche' non approvato.
+enabled = false
+filter = honeypot
+logpath = /var/log/apache2/honeypot.log
+backend = auto
+# Falsi positivi: servono 3 richieste esca in 10 minuti, non una sola.
+maxretry = 3
+findtime = 10m
+bantime = 1d
+ignoreip = 127.0.0.1/8 ::1
+action = honeypot-log
