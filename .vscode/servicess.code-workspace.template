@@ -1,0 +1,9 @@
+{
+  "folders": [
+    { "name": "Servicess.net", "path": "${workspaceFolder}" },
+    { "name": "Gestionali privati", "path": "${env:HOME}/apps" },
+    { "name": "Siti sorgente", "path": "${env:HOME}/web" },
+    { "name": "ETC", "path": "/etc" },
+    { "name": "VAR - pubblicazione", "path": "/var/www" }
+  ]
+}
