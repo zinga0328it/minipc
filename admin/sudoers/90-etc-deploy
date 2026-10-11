@@ -1,4 +1,0 @@
-# Concede a ragno SOLO il comando di deployment approvato.
-# Gli argomenti non sono fissati qui: li valida lo script (whitelist di percorsi e operazioni).
-Defaults!/usr/local/sbin/etc-deploy env_reset, !setenv
-ragno ALL=(root) NOPASSWD: /usr/local/sbin/etc-deploy

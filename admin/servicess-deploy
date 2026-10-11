@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Thin fixed-path entrypoint. The Python dispatcher validates every operation and argument.
-set -euo pipefail
-export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-exec /usr/bin/python3 /usr/local/lib/servicess/admin.py "$@"

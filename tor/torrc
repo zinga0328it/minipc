@@ -1,7 +1,0 @@
-DataDirectory /var/lib/tor
-PidFile /run/tor/tor.pid
-RunAsDaemon 0
-Log notice stdout
-SocksPort 9050
-HiddenServiceDir /var/lib/tor/hidden_service/
-HiddenServicePort 80 127.0.0.1:8081
