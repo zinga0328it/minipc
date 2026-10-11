@@ -8,8 +8,9 @@ Se sei l'orchestratore generale e non hai i requisiti del progetto, chiedi solo:
 - Scritture in `/etc` solo con `sudo -n /usr/local/sbin/etc-deploy` (install, reload, rollback, verify, list); VAR solo con il dispatcher allowlisted. Mai `sudo bash` operativo o `chmod`/`chown` estesi. Non creare `NOPASSWD: ALL`; se già presente, non installare il dispatcher ristretto finché l'amministratore non lo revoca.
 - Script Bash: `set -euo pipefail`, variabili quotate, test Bats in `tests/bash/`, controllo con `tools/check.sh` prima del commit.
 - Mai segreti nel repository o nei log. Non aprire porte pubbliche. SSH (22) non va mai interrotto.
+- Le chiavi API server-side stanno in `~/apps/<progetto>/secrets/` (file 0600, directory 0700; un file dotenv non cifra i dati ed è escluso da Git). Mai chiavi server in `~/web`, bundle frontend, log o manifest; Fail2ban non protegge le chiavi: l'API applica auth, autorizzazione, rate limit e rotazione, Fail2ban reagisce solo a log/IP.
 - Prima di ogni modifica: backup, validazione, rollback. Dopo: verifica del servizio e di SSH.
-- Commit solo sul ramo `honeypot`; `main` non si modifica.
+- Commit sul ramo di area (`main`, `etc`, `home`, `var`) e sul ramo di lavoro `honeypot` quando serve; non riscrivere storia condivisa e non fare merge automatico su `main`.
 - Riporta come "non verificato" tutto cio' che non e' stato provato davvero.
 - Architettura: gestionali privati in `~/apps/<nome>`, sorgenti statici in `~/web/<sito>`, pubblicazione allowlisted esclusivamente in `/var/www/<sito>/public`. Mai backend, database o segreti in `~/web` o `/var/www`.
 - Il deploy statico usa `deployment/static-site/deploy.py`: prima `--plan`, poi revisione dell'hash del manifest; backup e rollback sono obbligatori. Non eseguire deploy live senza approvazione.
